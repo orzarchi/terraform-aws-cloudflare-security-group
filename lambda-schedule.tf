@@ -10,7 +10,7 @@ resource "aws_cloudwatch_event_rule" "cloudflare-update-schedule" {
   name = "cloudflare-update-schedule"
   description = "Update cloudflare ips every day"
 
-  schedule_expression = "cron(0 20 * * ? *)"
+  schedule_expression = "${var.schedule_expression}"
 }
 
 

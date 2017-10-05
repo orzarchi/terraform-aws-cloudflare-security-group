@@ -24,5 +24,6 @@ Variables
 --------
 
 * security_group_id: An existing security group to populate with cloudflare ips as ingress rules.
+* schedule_expression: The cloudwatch schedule expression used to run the updater lambda. Defaults to every day at 20:00.
 * enabled (Optional) - whether to do anything at all, useful if cloudflare is not needed on all environments. 
 Accepts the string "true" or "false". Defaults to "true"
