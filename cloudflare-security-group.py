@@ -1,11 +1,10 @@
 import os
-
 import boto3
 from botocore.vendored import requests
-
+from datetime import datetime
 
 def get_cloudflare_ip_list():
-    'Call the CloudFlare API and return a list of IPs'
+    """Call the CloudFlare API and return a list of IPs"""
     response = requests.get('https://api.cloudflare.com/client/v4/ips')
     temp = response.json()
     if 'result' in temp and 'ipv4_cidrs' in temp['result']:
@@ -15,7 +14,7 @@ def get_cloudflare_ip_list():
 
 
 def get_aws_security_group(group_id):
-    'Return the defined Security Group'
+    """Return the defined Security Group"""
     ec2 = boto3.resource('ec2')
     group = ec2.SecurityGroup(group_id)
     if group.group_id == group_id:
@@ -24,7 +23,7 @@ def get_aws_security_group(group_id):
 
 
 def check_rule_exists(rules, address, port):
-    'Check if the rule currently exists'
+    """Check if the rule currently exists"""
     for rule in rules:
         for ip_range in rule['IpRanges']:
             if ip_range['CidrIp'] == address and rule['FromPort'] == port:
@@ -39,7 +38,7 @@ def get_existing_ip_addresses(rules):
 
 
 def add_rule(group, address, port):
-    'Add the ip address/port to the security group'
+    """Add the ip address/port to the security group"""
     group.authorize_ingress(IpProtocol="tcp", CidrIp=address, FromPort=port, ToPort=port)
     print("Added %s : %i  " % (address, port))
 
