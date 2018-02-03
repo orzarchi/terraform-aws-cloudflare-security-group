@@ -1,5 +1,6 @@
 resource "aws_cloudwatch_log_group" "lambda-log-group" {
   name = "UpdateCloudflareIps"
+  count = "${var.enabled == "true" ? 1 : 0}"
 }
 
 resource "aws_iam_role" "iam_for_lambda" {
@@ -24,6 +25,7 @@ EOF
 
 resource "aws_iam_policy" "policy" {
   name = "lambda-cloudflare-policy"
+  count = "${var.enabled == "true" ? 1 : 0}"
   description = "Allows cloudflare ip updating lambda to change security groups"
   policy = <<EOF
 {
@@ -59,11 +61,13 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "policy" {
+  count = "${var.enabled == "true" ? 1 : 0}"
   role = "${aws_iam_role.iam_for_lambda.id}"
   policy_arn = "${aws_iam_policy.policy.arn}"
 }
 
 data "archive_file" "lambda_zip" {
+  count = "${var.enabled == "true" ? 1 : 0}"
   type = "zip"
   source_file = "${path.module}/cloudflare-security-group.py"
   output_path = "${path.module}/lambda.zip"
@@ -71,7 +75,6 @@ data "archive_file" "lambda_zip" {
 
 resource "aws_lambda_function" "update-ips" {
   count = "${var.enabled == "true" ? 1 : 0}"
-
   function_name = "UpdateCloudflareIps"
   filename = "${path.module}/lambda.zip"
   source_code_hash = "${data.archive_file.lambda_zip.output_base64sha256}"
