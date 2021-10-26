@@ -3,9 +3,9 @@ variable "security_group_id" {
 }
 variable "enabled" {
   description = "Whether to do anything at all, useful if cloudflare is not needed on all environments. Accepts the string 'true' or 'false'."
-  default = "true"
+  default     = "true"
 }
 variable "schedule_expression" {
   description = "The cloudwatch schedule expression used to run the updater lambda."
-  default = "cron(0 20 * * ? *)"
+  default     = "cron(0 20 * * ? *)"
 }
